@@ -1,0 +1,9 @@
+gga0
+gga1
+gga2
+gga3
+gga4
+gga5
+gga6
+gga7
+gga8
