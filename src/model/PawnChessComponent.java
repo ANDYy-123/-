@@ -84,47 +84,66 @@ public class PawnChessComponent extends ChessComponent {
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
         ChessboardPoint source = getChessboardPoint();
-        if ((Math.abs(destination.getX() - source.getY()) != 0) || (Math.abs(destination.getY() - source.getX()) != 0)) {
-            if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
-                if (pawnImage == BISHOP_BLACK) {
-                    if (destination.getX() - source.getX() == 2 && destination.getY() == source.getY() && id == 1) {
-                        if (!(chessComponents[destination.getX() - 1][destination.getY()] instanceof EmptySlotComponent)) {
-                            return false;
-                        }
+      if (source.getX()==destination.getX()&&source.getY()==destination.getY()){
+          return false;
+      }else {
+          if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
+              if (pawnImage == BISHOP_BLACK) {
+                  if (destination.getX() - source.getX() == 2 && destination.getY() == source.getY() && id == 1) {
+                      if (!(chessComponents[destination.getX() - 1][destination.getY()] instanceof EmptySlotComponent)) {
+                          setPawnRiver(true);
+                          return false;
+                      }
 
-                    } else if (destination.getY() == source.getY() && destination.getX() - source.getX() == 1) {
-                        if (!(chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent)) {
-                            return false;
-                        }
-                    } else if (chessComponents[destination.getX()][destination.getY()].chessColor == ChessColor.WHITE && destination.getX() - source.getX() == 1 && Math.abs(destination.getY() - source.getY()) == 1) {
+                  } else if (destination.getY() == source.getY() && destination.getX() - source.getX() == 1) {
+                      if (!(chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent)) {
+                          return false;
+                      }
+                  } else if (chessComponents[destination.getX()][destination.getY()].chessColor == ChessColor.WHITE && destination.getX() - source.getX() == 1 && Math.abs(destination.getY() - source.getY()) == 1) {
 
-                    } else {
-                        return false;
-                    }
-                } else if (pawnImage == BISHOP_WHITE) {
-                    if (source.getX() - destination.getX() == 2 && destination.getY() == source.getY() && id == 1) {
-                        if (!(chessComponents[destination.getX() + 1][destination.getY()] instanceof EmptySlotComponent)) {
-                            return false;
-                        }
-                    } else if (destination.getY() == source.getY() && source.getX() - destination.getX() == 1) {
-                        if (!(chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent)) {
-                            return false;
-                        }
-                    } else if (chessComponents[destination.getX()][destination.getY()].chessColor == ChessColor.BLACK && destination.getX() - source.getX() == -1 && Math.abs(destination.getY() - source.getY()) == 1) {
+                  }
+                  else if (source.getX()==4&&destination.getX() - source.getX() == 1&&
+                          source.getY()-destination.getY()==1&&chessComponents[source.getX()][destination.getY()].chessColor.equals(ChessColor.WHITE)&&
+                          chessComponents[source.getX()][destination.getY()] instanceof PawnChessComponent
+                          && chessComponents[source.getX()][destination.getY()].isPawnRiver()){
 
-                    } else {
-                        return false;
-                    }
-                }else {
-                    return false;
-                }
-                id--;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+                  }
+                  else {
+                      return false;
+                  }
+              }
+              else if (pawnImage == BISHOP_WHITE) {
+                  if (source.getX() - destination.getX() == 2 && destination.getY() == source.getY() && id == 1) {
+                      if (!(chessComponents[destination.getX() + 1][destination.getY()] instanceof EmptySlotComponent)) {
+                          setPawnRiver(true);
+                          System.out.println("FUCK");
+                          return false;
+                      }
+                  } else if (destination.getY() == source.getY() && source.getX() - destination.getX() == 1) {
+                      if (!(chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent)) {
+                          return false;
+                      }
+                  } else if (chessComponents[destination.getX()][destination.getY()].chessColor == ChessColor.BLACK && destination.getX() - source.getX() == -1 && Math.abs(destination.getY() - source.getY()) == 1) {
+
+                  }
+                  else if (source.getX()==3&&destination.getX() - source.getX() == -1&&
+                          source.getY()-destination.getY()==1&&chessComponents[source.getX()][destination.getY()].chessColor.equals(ChessColor.BLACK)&&
+                          chessComponents[source.getX()][destination.getY()] instanceof PawnChessComponent
+                          && chessComponents[source.getX()][destination.getY()].isPawnRiver()){
+
+                  }
+                  else {
+                      return false;
+                  }
+              } else {
+                  return false;
+              }
+              id--;
+          } else {
+              return false;
+          }
+      }
+        move++;
         return true;
     }
 
@@ -143,6 +162,10 @@ public class PawnChessComponent extends ChessComponent {
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth(), getHeight());
 
+        }
+        if (now) {
+            g.setColor(Color.BLUE);
+            g.drawRect(0,0,getWidth()-1,getHeight()-1);
         }
     }
 //    public void HuaDian(ChessComponent[][] chessComponents){

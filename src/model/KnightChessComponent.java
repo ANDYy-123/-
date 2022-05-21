@@ -78,7 +78,10 @@ public class KnightChessComponent extends ChessComponent {
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
         ChessboardPoint source = getChessboardPoint();
-        if ((Math.abs(destination.getX() - source.getY()) != 0) || (Math.abs(destination.getY() - source.getX()) != 0)) {
+        if (destination.getX()==source.getX()&&destination.getY()==source.getY()){
+            return false;
+        }
+        else {
             if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
                 if (Math.abs(source.getX() - destination.getX()) == 2 && Math.abs(source.getY() - destination.getY()) == 1) {
                 } else if (Math.abs(source.getX() - destination.getX()) == 1 && Math.abs(source.getY() - destination.getY()) == 2) {
@@ -88,9 +91,8 @@ public class KnightChessComponent extends ChessComponent {
             } else {
                 return false;
             }
-        } else {
-            return false;
         }
+        move++;
         return true;
     }
 
@@ -108,6 +110,10 @@ public class KnightChessComponent extends ChessComponent {
         if (isSelected()) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth(), getHeight());
+        }
+        if (now) {
+            g.setColor(Color.BLUE);
+            g.drawRect(0,0,getWidth()-1,getHeight()-1);
         }
     }
 }

@@ -42,6 +42,22 @@ public abstract class ChessComponent extends JComponent {
         ZhuTi = zhuTi;
     }
 
+    protected int move=0;
+
+    private boolean PawnRiver=false;
+
+    public boolean isPawnRiver() {
+        return PawnRiver;
+    }
+
+    public void setPawnRiver(boolean pawnRiver) {
+        PawnRiver = pawnRiver;
+    }
+
+    public int getMove() {
+        return move;
+    }
+
     /**
      * chessboardPoint: 表示8*8棋盘中，当前棋子在棋格对应的位置，如(0, 0), (1, 0), (0, 7),(7, 7)等等
      * <br>
@@ -52,6 +68,17 @@ public abstract class ChessComponent extends JComponent {
     private ChessboardPoint chessboardPoint;
     protected final ChessColor chessColor;
     private boolean selected;
+    protected boolean now=false;
+    protected boolean KingAndRook=false;
+//    protected boolean
+
+    public boolean isNow() {
+        return now;
+    }
+
+    public void setNow(boolean now) {
+        this.now = now;
+    }
 
     protected ChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
@@ -111,11 +138,14 @@ public abstract class ChessComponent extends JComponent {
             clickController.onClick(this);
         }
         if (e.getID()==MouseEvent.MOUSE_ENTERED){
-            setSelected(true);
-            this.repaint();
+            if (chessColor.equals(clickController.getChessboard().getCurrentColor())||chessColor.equals(ChessColor.NONE)){
+                setNow(true);
+                this.repaint();
+            }
+
         }
         if (e.getID()==MouseEvent.MOUSE_EXITED){
-            setSelected(false);
+            setNow(false);
             this.repaint();
         }
     }

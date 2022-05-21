@@ -12,6 +12,10 @@ public class ClickController {
     private ChessComponent first;
     private static int cnt=0;
 
+    public Chessboard getChessboard() {
+        return chessboard;
+    }
+
     public int getCnt() {
         return cnt;
     }

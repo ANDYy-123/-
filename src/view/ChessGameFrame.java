@@ -258,7 +258,6 @@ public class ChessGameFrame extends JFrame {
                 content = gameController.getChessboard().getChessboardGraph();
                 byte[] bytes = content.getBytes();
                 fos.write(bytes);
-
             } catch (IOException s) {
                 s.printStackTrace();
             } finally {
@@ -268,8 +267,6 @@ public class ChessGameFrame extends JFrame {
                     ex.printStackTrace();
                 }
             }
-
-
         });
     }
 
@@ -286,26 +283,9 @@ public class ChessGameFrame extends JFrame {
             FileInputStream fis = null;
             String result = "";
             List<String> a = new ArrayList<>();
-//            try {
-//
-//                int size = fis.available();
-//                byte[] bytes = new byte[size];
-//                fis.read(bytes);
-//
-//                for (int i = 0; i < bytes.length; i++) {
-//                    a.add(String.valueOf((bytes[i])));
-//                }
-////                应该传入9*8的，但是都变成一行了
-//                gameController.getChessboard().loadChessGame(a);
-//            } catch (IOException s) {
-//                s.printStackTrace();
-//            }
-
             try {
                 fis = new FileInputStream(filePath);
-//                if (!f.exists()){
-//                    return null;
-//                }
+
                 BufferedReader br = new BufferedReader(new FileReader(filePath));
 
 //构造一个BufferedReader类来读取文件
@@ -318,20 +298,12 @@ public class ChessGameFrame extends JFrame {
                 b.printStackTrace();
             }
             gameController.getChessboard().loadChessGame(a);
-//       } finally {
-//                try {
-//                    fis.close();
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-
         });
     }
 
     private void addGif(){
         MyJPanel m = new MyJPanel();
-        m.setBounds(HEIGTH-90, HEIGTH / 10 + 390,100,100);
+        m.setBounds(HEIGTH-90, HEIGTH / 10 + 390,30,30);
         Timer timer=new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

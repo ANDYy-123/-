@@ -28,7 +28,7 @@ public class EmptySlotComponent extends ChessComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
+        if (isNow()) { // Highlights the model if selected.
             g.setColor(Color.BLUE);
             g.fillRect(0,0,getWidth(),getHeight());
         }

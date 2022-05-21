@@ -80,63 +80,65 @@ public class QueenChessComponent extends ChessComponent {
         ChessboardPoint source = getChessboardPoint();
         int col;
         int row;
-        if ((Math.abs(destination.getX() - source.getY()) != 0) || (Math.abs(destination.getY() - source.getX()) != 0)) {
-            if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
-                if (Math.abs(source.getX() - destination.getX()) == Math.abs(source.getY() - destination.getY())) {
-                    col = source.getY();
-                    row = source.getX();
-                    if (destination.getY() > source.getY() && destination.getX() > source.getX()) {
-                        for (; col + 1 < destination.getY() && row + 1 < destination.getX(); col++, row++) {
-                            if (!(chessComponents[row + 1][col + 1] instanceof EmptySlotComponent)) {
-                                return false;
-                            }
-                        }
-                    } else if (destination.getY() < source.getY() && destination.getX() > source.getX()) {
-                        for (; col - 1 > destination.getY() && row + 1 < destination.getX(); col--, row++) {
-                            if (!(chessComponents[row + 1][col - 1] instanceof EmptySlotComponent)) {
-                                return false;
-                            }
-                        }
-                    } else if (destination.getY() > source.getY() && destination.getX() < source.getX()) {
-                        for (; col + 1 < destination.getY() && row - 1 > destination.getX(); col++, row--) {
-                            if (!(chessComponents[row - 1][col + 1] instanceof EmptySlotComponent)) {
-                                return false;
-                            }
-                        }
-                    } else if (destination.getY() < source.getY() && destination.getX() < source.getX()) {
-                        for (; col - 1 > destination.getY() && row - 1 > destination.getX(); col--, row--) {
-                            if (!(chessComponents[row - 1][col - 1] instanceof EmptySlotComponent)) {
-                                return false;
-                            }
-                        }
-                    }else {
-                        return false;
-                    }
-                } else if (source.getX() == destination.getX()) {
-                    row = source.getX();
-                    for (col = Math.min(source.getY(), destination.getY()) + 1;
-                         col < Math.max(source.getY(), destination.getY()); col++) {
-                        if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
-                            return false;
-                        }
-                    }
-                } else if (source.getY() == destination.getY()) {
-                    col = source.getY();
-                    for (row = Math.min(source.getX(), destination.getX()) + 1;
-                         row < Math.max(source.getX(), destination.getX()); row++) {
-                        if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
-                            return false;
-                        }
-                    }
-                } else { // Not on the same row or the same column.
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+       if (source.getY()==destination.getY()&&source.getX()==destination.getX()){
+           return false;
+       }else {
+           if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
+               if (Math.abs(source.getX() - destination.getX()) == Math.abs(source.getY() - destination.getY())) {
+                   col = source.getY();
+                   row = source.getX();
+                   if (destination.getY() > source.getY() && destination.getX() > source.getX()) {
+                       for (; col + 1 < destination.getY() && row + 1 < destination.getX(); col++, row++) {
+                           if (!(chessComponents[row + 1][col + 1] instanceof EmptySlotComponent)) {
+                               return false;
+                           }
+                       }
+                   } else if (destination.getY() < source.getY() && destination.getX() > source.getX()) {
+                       for (; col - 1 > destination.getY() && row + 1 < destination.getX(); col--, row++) {
+                           if (!(chessComponents[row + 1][col - 1] instanceof EmptySlotComponent)) {
+                               return false;
+                           }
+                       }
+                   } else if (destination.getY() > source.getY() && destination.getX() < source.getX()) {
+                       for (; col + 1 < destination.getY() && row - 1 > destination.getX(); col++, row--) {
+                           if (!(chessComponents[row - 1][col + 1] instanceof EmptySlotComponent)) {
+                               return false;
+                           }
+                       }
+                   } else if (destination.getY() < source.getY() && destination.getX() < source.getX()) {
+                       for (; col - 1 > destination.getY() && row - 1 > destination.getX(); col--, row--) {
+                           if (!(chessComponents[row - 1][col - 1] instanceof EmptySlotComponent)) {
+                               return false;
+                           }
+                       }
+                   }
+                   else {
+                       return false;
+                   }
+               } else if (source.getX() == destination.getX()) {
+                   row = source.getX();
+                   for (col = Math.min(source.getY(), destination.getY()) + 1;
+                        col < Math.max(source.getY(), destination.getY()); col++) {
+                       if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
+                           return false;
+                       }
+                   }
+               } else if (source.getY() == destination.getY()) {
+                   col = source.getY();
+                   for (row = Math.min(source.getX(), destination.getX()) + 1;
+                        row < Math.max(source.getX(), destination.getX()); row++) {
+                       if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
+                           return false;
+                       }
+                   }
+               } else { // Not on the same row or the same column.
+                   return false;
+               }
+           } else {
+               return false;
+           }
+       }
+        move++;
         return true;
     }
 
@@ -154,6 +156,10 @@ public class QueenChessComponent extends ChessComponent {
         if (isSelected()) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth(), getHeight());
+        }
+        if (now) {
+            g.setColor(Color.BLUE);
+            g.drawRect(0,0,getWidth()-1,getHeight()-1);
         }
     }
 }

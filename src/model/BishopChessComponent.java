@@ -34,12 +34,10 @@ public class BishopChessComponent extends ChessComponent {
     public void loadResource() throws IOException {
         if (BISHOP_WHITE == null) {
             BISHOP_WHITE = ImageIO.read(new File("./images/bishop-white.png"));
-
         }
 
         if (BISHOP_BLACK == null) {
             BISHOP_BLACK = ImageIO.read(new File("./images/bishop-black.png"));
-
         }
     }
 
@@ -82,7 +80,9 @@ public class BishopChessComponent extends ChessComponent {
         ChessboardPoint source = getChessboardPoint();
         int col = source.getY();
         int row = source.getX();
-        if ((Math.abs(destination.getX() - source.getY()) != 0) && (Math.abs(destination.getY() - source.getX()) != 0)) {
+        if (col == destination.getY() && row == destination.getX()) {
+            return false;
+        } else {
             if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
                 if (Math.abs(source.getX() - destination.getX()) == Math.abs(source.getY() - destination.getY())) {
                     if (destination.getY() > source.getY() && destination.getX() > source.getX()) {
@@ -109,7 +109,7 @@ public class BishopChessComponent extends ChessComponent {
                                 return false;
                             }
                         }
-                    }else {
+                    } else {
                         return false;
                     }
                 } else {
@@ -118,9 +118,8 @@ public class BishopChessComponent extends ChessComponent {
             } else {
                 return false;
             }
-        } else {
-            return false;
         }
+        move++;
         return true;
     }
 
@@ -138,6 +137,10 @@ public class BishopChessComponent extends ChessComponent {
         if (isSelected()) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth(), getHeight());
+        }
+        if (now) {
+            g.setColor(Color.BLUE);
+            g.drawRect(0,0,getWidth()-1,getHeight()-1);
         }
     }
 }

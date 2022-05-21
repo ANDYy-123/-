@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 这个类表示面板上的棋盘组件对象
@@ -28,13 +29,16 @@ public class Chessboard extends JComponent {
     private static final int CHESSBOARD_SIZE = 8;
 
     private final ChessComponent[][] chessComponents = new ChessComponent[CHESSBOARD_SIZE][CHESSBOARD_SIZE];
-    private ChessColor currentColor = ChessColor.BLACK;
+    private ChessColor currentColor = ChessColor.WHITE;
     //all chessComponents in this chessboard are shared only one model controller
     private final ClickController clickController = new ClickController(this);
     private final int CHESS_SIZE;
     private static int cnt = 0;
-    StringBuilder b=new StringBuilder();
-//    private ChessComponent[][]
+    StringBuilder b = new StringBuilder();
+    private int co;
+    private int ro;
+    private ChessColor C;
+    //    private ChessComponent[][]
 
     public int getCnt() {
         return cnt;
@@ -49,26 +53,26 @@ public class Chessboard extends JComponent {
         initiateEmptyChessboard();
 
         // FIXME: Initialize chessboard for testing only.
-        initRookOnBoard(0, 0, ChessColor.BLACK);
-        initRookOnBoard(0, CHESSBOARD_SIZE - 1, ChessColor.BLACK);
-        initRookOnBoard(CHESSBOARD_SIZE - 1, 0, ChessColor.WHITE);
-        initRookOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 1, ChessColor.WHITE);
-        initBishopOnBoard(0, CHESSBOARD_SIZE - 3, ChessColor.BLACK);
-        initBishopOnBoard(0, 2, ChessColor.BLACK);
-        initBishopOnBoard(CHESSBOARD_SIZE - 1, 2, ChessColor.WHITE);
-        initBishopOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 3, ChessColor.WHITE);
-        initQueenOnBoard(0, 3, ChessColor.BLACK);
-        initQueenOnBoard(CHESSBOARD_SIZE - 1, 3, ChessColor.WHITE);
+//        initRookOnBoard(0, 0, ChessColor.BLACK);
+//        initRookOnBoard(0, CHESSBOARD_SIZE - 1, ChessColor.BLACK);
+//        initRookOnBoard(CHESSBOARD_SIZE - 1, 0, ChessColor.WHITE);
+//        initRookOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 1, ChessColor.WHITE);
+//        initBishopOnBoard(0, CHESSBOARD_SIZE - 3, ChessColor.BLACK);
+//        initBishopOnBoard(0, 2, ChessColor.BLACK);
+//        initBishopOnBoard(CHESSBOARD_SIZE - 1, 2, ChessColor.WHITE);
+//        initBishopOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 3, ChessColor.WHITE);
+//        initQueenOnBoard(0, 3, ChessColor.BLACK);
+//        initQueenOnBoard(CHESSBOARD_SIZE - 1, 3, ChessColor.WHITE);
         for (int i = 0; i < CHESSBOARD_SIZE; i++) {
             initPawnOnBoard(1, i, ChessColor.BLACK);
         }
         for (int i = 0; i < CHESSBOARD_SIZE; i++) {
             initPawnOnBoard(6, i, ChessColor.WHITE);
         }
-        initKnightOnBoard(0, 1, ChessColor.BLACK);
-        initKnightOnBoard(0, CHESSBOARD_SIZE - 2, ChessColor.BLACK);
-        initKnightOnBoard(CHESSBOARD_SIZE - 1, 1, ChessColor.WHITE);
-        initKnightOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 2, ChessColor.WHITE);
+//        initKnightOnBoard(0, 1, ChessColor.BLACK);
+//        initKnightOnBoard(0, CHESSBOARD_SIZE - 2, ChessColor.BLACK);
+//        initKnightOnBoard(CHESSBOARD_SIZE - 1, 1, ChessColor.WHITE);
+//        initKnightOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 2, ChessColor.WHITE);
         initKingOnBoard(0, 4, ChessColor.BLACK);
         initKingOnBoard(CHESSBOARD_SIZE - 1, 4, ChessColor.WHITE);
     }
@@ -93,8 +97,12 @@ public class Chessboard extends JComponent {
         add(chessComponents[row][col] = chessComponent);
     }
 
-    public void swapChessComponents(ChessComponent chess1, ChessComponent chess2)  {
+    public void swapChessComponents(ChessComponent chess1, ChessComponent chess2) {
         // Note that chess1 has higher priority, 'destroys' chess2 if exists.
+        boolean kingAndRook = chess1 instanceof KingChessComponent && chess2 instanceof EmptySlotComponent
+                && Math.abs(chess1.getChessboardPoint().getY() - chess2.getChessboardPoint().getY()) == 2;
+        ChessComponent chess3;
+        ChessComponent chess4;
         if (!(chess2 instanceof EmptySlotComponent)) {
             remove(chess2);
             add(chess2 = new EmptySlotComponent(chess2.getChessboardPoint(), chess2.getLocation(), clickController, CHESS_SIZE));
@@ -104,22 +112,43 @@ public class Chessboard extends JComponent {
         chessComponents[row1][col1] = chess1;
         int row2 = chess2.getChessboardPoint().getX(), col2 = chess2.getChessboardPoint().getY();
         chessComponents[row2][col2] = chess2;
-        if (KingJiang(chessComponents)) {
-            System.out.println("skj");
-            JOptionPane.showMessageDialog(null, "您正在被将军！", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
+        if (kingAndRook) {
+            if (chess1.getChessboardPoint().getY() < 4) {
+                chess3 = chessComponents[chess2.getChessboardPoint().getX()][0];
+                chess4 = chessComponents[chess2.getChessboardPoint().getX()][3];
+                chess3.swapLocation(chess4);
+                int row3 = chess3.getChessboardPoint().getX(), col3 = chess3.getChessboardPoint().getY();
+                chessComponents[row3][col3] = chess3;
+                int row4 = chess4.getChessboardPoint().getX(), col4 = chess4.getChessboardPoint().getY();
+                chessComponents[row4][col4] = chess4;
+                chess3.repaint();
+                chess4.repaint();
+            } else if (chess1.getChessboardPoint().getY() > 4) {
+                chess3 = chessComponents[chess2.getChessboardPoint().getX()][7];
+                chess4 = chessComponents[chess2.getChessboardPoint().getX()][5];
+                chess3.swapLocation(chess4);
+                int row3 = chess3.getChessboardPoint().getX(), col3 = chess3.getChessboardPoint().getY();
+                chessComponents[row3][col3] = chess3;
+                int row4 = chess4.getChessboardPoint().getX(), col4 = chess4.getChessboardPoint().getY();
+                chessComponents[row4][col4] = chess4;
+                chess3.repaint();
+                chess4.repaint();
+            }
+
+
         }
+
         chess1.repaint();
         chess2.repaint();
-
     }
 
+    //判断将军
     public boolean KingJiang(ChessComponent[][] chessComponents) {
         ChessboardPoint a = null;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if ((chessComponents[i][j] instanceof KingChessComponent) && chessComponents[i][j].getChessColor() != currentColor) {
                     a = chessComponents[i][j].getChessboardPoint();
-                    break;
                 }
             }
         }
@@ -127,13 +156,34 @@ public class Chessboard extends JComponent {
             for (int j = 0; j < 8; j++) {
                 if (chessComponents[i][j].getChessColor() == currentColor
                         && (!((chessComponents[i][j]) instanceof KingChessComponent))
-            &&chessComponents[i][j].canMoveTo(chessComponents, a)) {
+                        && chessComponents[i][j].canMoveTo(chessComponents, a)) {
                     return true;
                 }
             }
         }
         return false;
     }
+
+    public boolean PawnUp() {
+        for (int i = 0; i < 8; i++) {
+            if (chessComponents[0][i] instanceof PawnChessComponent
+                    && chessComponents[0][i].getChessColor().equals(ChessColor.WHITE)) {
+                co=i;
+                ro=0;
+                C=ChessColor.WHITE;
+                return true;
+            }
+            if (chessComponents[7][i] instanceof PawnChessComponent
+                    && chessComponents[7][i].getChessColor().equals(ChessColor.BLACK)) {
+                co=i;
+                ro=7;
+                C=ChessColor.BLACK;
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void initiateEmptyChessboard() {
         for (int i = 0; i < chessComponents.length; i++) {
@@ -144,6 +194,37 @@ public class Chessboard extends JComponent {
     }
 
     public void swapColor() {
+        if (PawnUp()){
+            Object[] options = {"皇后", "主教", "马","车"};
+            String s = (String) JOptionPane.showInputDialog(null, "请选择你的棋子:\n", "主题", JOptionPane.PLAIN_MESSAGE, new ImageIcon("xx.png"), options, "xx");
+            if (Objects.equals(s, "皇后")) {
+            remove(chessComponents[ro][co]);
+            add(chessComponents[ro][co] = new EmptySlotComponent(chessComponents[ro][co].getChessboardPoint(), chessComponents[ro][co].getLocation(), clickController, CHESS_SIZE));
+            initQueenOnBoard(ro,co,C);
+                chessComponents[ro][co].repaint();
+            }
+            else  if (Objects.equals(s, "主教")) {
+                remove(chessComponents[ro][co]);
+                add(chessComponents[ro][co] = new EmptySlotComponent(chessComponents[ro][co].getChessboardPoint(), chessComponents[ro][co].getLocation(), clickController, CHESS_SIZE));
+                initBishopOnBoard(ro,co,C);
+                chessComponents[ro][co].repaint();
+            }
+            else if (Objects.equals(s, "马")) {
+                remove(chessComponents[ro][co]);
+                add(chessComponents[ro][co] = new EmptySlotComponent(chessComponents[ro][co].getChessboardPoint(), chessComponents[ro][co].getLocation(), clickController, CHESS_SIZE));
+                initKnightOnBoard(ro,co,C);
+                chessComponents[ro][co].repaint();
+            }
+            else if (Objects.equals(s, "车")) {
+                remove(chessComponents[ro][co]);
+                add(chessComponents[ro][co] = new EmptySlotComponent(chessComponents[ro][co].getChessboardPoint(), chessComponents[ro][co].getLocation(), clickController, CHESS_SIZE));
+                initRookOnBoard(ro,co,C);
+                chessComponents[ro][co].repaint();
+            }
+        }
+        if (KingJiang(chessComponents)) {
+            JOptionPane.showMessageDialog(null, "您正在被将军！", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
+        }
         currentColor = currentColor == ChessColor.BLACK ? ChessColor.WHITE : ChessColor.BLACK;
         cnt++;
     }
@@ -188,8 +269,8 @@ public class Chessboard extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setColor(Color.blue);
-        g.fillRect(0,0,getWidth(),getHeight());
+        g.setColor(Color.ORANGE);
+        g.fillRect(0, 0, getWidth(), getHeight());
     }
 
 
@@ -273,51 +354,51 @@ public class Chessboard extends JComponent {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (chessComponents[i][j] instanceof PawnChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
-                   b.append("p");
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
+                    b.append("p");
                 }
                 if (chessComponents[i][j] instanceof BishopChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
                     b.append("b");
                 }
                 if (chessComponents[i][j] instanceof KingChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
                     b.append("k");
                 }
                 if (chessComponents[i][j] instanceof QueenChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
                     b.append("q");
                 }
                 if (chessComponents[i][j] instanceof KnightChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
                     b.append("n");
                 }
                 if (chessComponents[i][j] instanceof RookChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.WHITE)) {
                     b.append("r");
                 }
                 if (chessComponents[i][j] instanceof PawnChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
                     b.append("P");
                 }
                 if (chessComponents[i][j] instanceof BishopChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
                     b.append("B");
                 }
                 if (chessComponents[i][j] instanceof KingChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
                     b.append("K");
                 }
                 if (chessComponents[i][j] instanceof QueenChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
                     b.append("Q");
                 }
                 if (chessComponents[i][j] instanceof KnightChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
                     b.append("N");
                 }
                 if (chessComponents[i][j] instanceof RookChessComponent
-                        &&chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
+                        && chessComponents[i][j].getChessColor().equals(ChessColor.BLACK)) {
                     b.append("R");
                 }
                 if (chessComponents[i][j] instanceof EmptySlotComponent) {
@@ -327,10 +408,10 @@ public class Chessboard extends JComponent {
             }
             b.append("\n");
         }
-        if (currentColor==ChessColor.BLACK){
+        if (currentColor == ChessColor.BLACK) {
             b.append("b");
         }
-        if (currentColor==ChessColor.WHITE){
+        if (currentColor == ChessColor.WHITE) {
             b.append("w");
         }
 

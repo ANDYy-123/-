@@ -27,6 +27,7 @@ public class KingChessComponent extends ChessComponent {
     private boolean WangCun;
     private ChessColor c;
 
+
     /**
      * 读取加载车棋子的图片
      *
@@ -98,18 +99,27 @@ public class KingChessComponent extends ChessComponent {
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
         ChessboardPoint source = getChessboardPoint();
         boolean p = false;
+        boolean s=true;
+        ChessboardPoint KING=new ChessboardPoint((source.getX()+destination.getX())/2,(source.getY()+destination.getY())/2);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (chessComponents[i][j].getChessColor() != c
                         && (!(chessComponents[i][j] instanceof KingChessComponent))
-                                 &&  chessComponents[i][j].canMoveTo(chessComponents, destination)) {
+                        && chessComponents[i][j].canMoveTo(chessComponents, destination)) {
                     p = true;
-                    break;
                 }
-
+                if (chessComponents[i][j].getChessColor() != c
+                        && (!(chessComponents[i][j] instanceof KingChessComponent))
+                        &&( chessComponents[i][j].canMoveTo(chessComponents, KING)
+                        ||chessComponents[i][j].canMoveTo(chessComponents,source))){
+                    s=false;
+                }
             }
         }
-        if ((Math.abs(destination.getX() - source.getY()) != 0) || (Math.abs(destination.getY() - source.getX()) != 0)) {
+        if (source.getY() == destination.getY() && source.getX() == destination.getX()) {
+            return false;
+        }
+        else {
             if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
                 if (!p) {
                     if (Math.abs(source.getX() - destination.getX()) == 1 && source.getY() == destination.getY()) {
@@ -118,7 +128,83 @@ public class KingChessComponent extends ChessComponent {
 
                     } else if (Math.abs(source.getY() - destination.getY()) == 1 && Math.abs(source.getX() - destination.getX()) == 1) {
 
-                    } else { // Not on the same row or the same column.
+                    }
+                    else if (destination.getX()==source.getX()&&Math.abs(source.getY()-destination.getY())==2
+                            &&source.getX()==0&&source.getY()==4&&chessColor.equals(ChessColor.BLACK)&&this.move==0
+                            &&((chessComponents[0][0] instanceof RookChessComponent
+                            &&chessComponents[0][0].chessColor.equals(ChessColor.BLACK)&&chessComponents[0][0].getMove()==0))
+                            &&s){
+                            if (source.getY()>destination.getY()){
+                                for (int col = 1;
+                                     col < 4; col++) {
+                                    if (!(chessComponents[0][col] instanceof EmptySlotComponent)) {
+                                        return false;
+                                    }
+                                }
+                                KingAndRook=true;
+                            }else {
+                                return false;
+                            }
+                    }
+                    else if (destination.getX()==source.getX()&&Math.abs(source.getY()-destination.getY())==2&&source.getX()==7
+                            &&source.getY()==4&&chessColor.equals(ChessColor.WHITE)&&this.move==0
+                            &&((chessComponents[7][0] instanceof RookChessComponent
+                            &&chessComponents[7][0].chessColor.equals(ChessColor.WHITE)&&chessComponents[7][0].getMove()==0))
+                            &&s){
+                        if (source.getY()>destination.getY()){
+                            for (int col = 1;
+                                 col < 4; col++) {
+                                if (!(chessComponents[7][col] instanceof EmptySlotComponent)) {
+                                    return false;
+                                }
+                            }
+                            KingAndRook=true;
+                        }
+                        else if (source.getY()<destination.getY()){
+                            for (int col = 5;
+                                 col < 7; col++) {
+                                if (!(chessComponents[7][col] instanceof EmptySlotComponent)) {
+                                    return false;
+                                }
+                            }
+                            KingAndRook=true;
+                        }
+                    }
+                    else if (destination.getX()==source.getX()&&Math.abs(source.getY()-destination.getY())==2
+                            &&source.getX()==0&&source.getY()==4&&chessColor.equals(ChessColor.BLACK)&&this.move==0
+                            &&((chessComponents[0][7] instanceof RookChessComponent
+                            &&chessComponents[0][7].chessColor.equals(ChessColor.BLACK)&&chessComponents[0][7].getMove()==0))
+                            &&s){
+                        if (source.getY()<destination.getY()){
+                            for (int col = 5;
+                                 col < 7; col++) {
+                                if (!(chessComponents[0][col] instanceof EmptySlotComponent)) {
+                                    return false;
+                                }
+                            }
+                            KingAndRook=true;
+                        }else {
+                            return false;
+                        }
+                    }
+                    else if (destination.getX()==source.getX()&&Math.abs(source.getY()-destination.getY())==2&&source.getX()==7
+                            &&source.getY()==4&&chessColor.equals(ChessColor.WHITE)&&this.move==0
+                            &&((chessComponents[7][7] instanceof RookChessComponent
+                            &&chessComponents[7][7].chessColor.equals(ChessColor.WHITE)
+                            &&chessComponents[7][7].getMove()==0))&&s){
+                        if (source.getY()<destination.getY()){
+                            for (int col = 5;
+                                 col < 7; col++) {
+                                if (!(chessComponents[7][col] instanceof EmptySlotComponent)) {
+                                    return false;
+                                }
+                            }
+                            KingAndRook=true;
+                        }else {
+                            return false;
+                        }
+                    }
+                    else { // Not on the same row or the same column.
                         return false;
                     }
                 } else {
@@ -127,9 +213,8 @@ public class KingChessComponent extends ChessComponent {
             } else {
                 return false;
             }
-        } else {
-            return false;
         }
+        move++;
         return true;
     }
 
@@ -162,6 +247,10 @@ public class KingChessComponent extends ChessComponent {
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth(), getHeight());
 //            g.drawOval(50, 50, getWidth(), getHeight());
+        }
+        if (now) {
+            g.setColor(Color.BLUE);
+            g.drawRect(0,0,getWidth()-1,getHeight()-1);
         }
     }
 }
