@@ -7,6 +7,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 这个类表示国际象棋里面的象
@@ -71,9 +73,70 @@ public class BishopChessComponent extends ChessComponent {
      * 车棋子的移动规则
      *
      * @param chessComponents 棋盘
-     * @param destination     目标位置，如(0, 0), (0, 7)等等
+
      * @return 车棋子移动的合法性
      */
+@Override
+public  List<ChessboardPoint> canMoveTo(ChessComponent[][] chessComponents){
+    List<ChessboardPoint> can=new ArrayList<>();
+    ChessboardPoint source = getChessboardPoint();
+    for (int i=0;i<8;i++){
+        for (int j=0;j<8;j++){
+            boolean CanMove=true;
+            ChessboardPoint destination=new ChessboardPoint(i,j);
+            int col = source.getY();
+            int row = source.getX();
+            if (col == destination.getY() && row == destination.getX()) {
+                CanMove= false;
+            } else {
+                if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
+                    if (Math.abs(source.getX() - destination.getX()) == Math.abs(source.getY() - destination.getY())) {
+                        if (destination.getY() > source.getY() && destination.getX() > source.getX()) {
+                            for (; col + 1 < destination.getY() && row + 1 < destination.getX(); col++, row++) {
+                                if (!(chessComponents[row + 1][col + 1] instanceof EmptySlotComponent)) {
+                                    CanMove= false;
+                                }
+                            }
+                        }
+                        else if (destination.getY() < source.getY() && destination.getX() > source.getX()) {
+                            for (; col - 1 > destination.getY() && row + 1 < destination.getX(); col--, row++) {
+                                if (!(chessComponents[row + 1][col - 1] instanceof EmptySlotComponent)) {
+                                    CanMove= false;
+                                }
+                            }
+                        }
+                        else if (destination.getY() > source.getY() && destination.getX() < source.getX()) {
+                            for (; col + 1 < destination.getY() && row - 1 > destination.getX(); col++, row--) {
+                                if (!(chessComponents[row - 1][col + 1] instanceof EmptySlotComponent)) {
+                                    CanMove= false;
+                                }
+                            }
+                        }
+                        else if (destination.getY() < source.getY() && destination.getX() < source.getX()) {
+                            for (; col - 1 > destination.getY() && row - 1 > destination.getX(); col--, row--) {
+                                if (!(chessComponents[row - 1][col - 1] instanceof EmptySlotComponent)) {
+                                    CanMove= false;
+                                }
+                            }
+                        }
+                        else {
+                            CanMove= false;
+                        }
+                    } else {
+                        CanMove= false;
+                    }
+                }
+                else {
+                    CanMove= false;
+                }
+            }
+            if (CanMove){
+                can.add(destination);
+            }
+        }
+    }
+return can;
+}
 
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {

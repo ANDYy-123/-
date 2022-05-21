@@ -7,6 +7,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 这个类表示国际象棋里面的象
@@ -67,11 +69,86 @@ public class QueenChessComponent extends ChessComponent {
         initiateQueenImage(color);
     }
 
+    @Override
+    public java.util.List<ChessboardPoint> canMoveTo(ChessComponent[][] chessComponents){
+        List<ChessboardPoint> can=new ArrayList<>();
+        ChessboardPoint source = getChessboardPoint();
+        for (int m=0;m<8;m++){
+            for (int n=0;n<8;n++){
+                boolean CanMove=true;
+                ChessboardPoint destination=new ChessboardPoint(m,n);
+                int col;
+                int row;
+                if (source.getY()==destination.getY()&&source.getX()==destination.getX()){
+                    CanMove= false;
+                }else {
+                    if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
+                        if (Math.abs(source.getX() - destination.getX()) == Math.abs(source.getY() - destination.getY())) {
+                            col = source.getY();
+                            row = source.getX();
+                            if (destination.getY() > source.getY() && destination.getX() > source.getX()) {
+                                for (; col + 1 < destination.getY() && row + 1 < destination.getX(); col++, row++) {
+                                    if (!(chessComponents[row + 1][col + 1] instanceof EmptySlotComponent)) {
+                                        CanMove= false;
+                                    }
+                                }
+                            } else if (destination.getY() < source.getY() && destination.getX() > source.getX()) {
+                                for (; col - 1 > destination.getY() && row + 1 < destination.getX(); col--, row++) {
+                                    if (!(chessComponents[row + 1][col - 1] instanceof EmptySlotComponent)) {
+                                        CanMove= false;
+                                    }
+                                }
+                            } else if (destination.getY() > source.getY() && destination.getX() < source.getX()) {
+                                for (; col + 1 < destination.getY() && row - 1 > destination.getX(); col++, row--) {
+                                    if (!(chessComponents[row - 1][col + 1] instanceof EmptySlotComponent)) {
+                                        CanMove= false;
+                                    }
+                                }
+                            } else if (destination.getY() < source.getY() && destination.getX() < source.getX()) {
+                                for (; col - 1 > destination.getY() && row - 1 > destination.getX(); col--, row--) {
+                                    if (!(chessComponents[row - 1][col - 1] instanceof EmptySlotComponent)) {
+                                        CanMove= false;
+                                    }
+                                }
+                            }
+                            else {
+                                CanMove= false;
+                            }
+                        } else if (source.getX() == destination.getX()) {
+                            row = source.getX();
+                            for (col = Math.min(source.getY(), destination.getY()) + 1;
+                                 col < Math.max(source.getY(), destination.getY()); col++) {
+                                if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
+                                    CanMove= false;
+                                }
+                            }
+                        } else if (source.getY() == destination.getY()) {
+                            col = source.getY();
+                            for (row = Math.min(source.getX(), destination.getX()) + 1;
+                                 row < Math.max(source.getX(), destination.getX()); row++) {
+                                if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
+                                    CanMove= false;
+                                }
+                            }
+                        } else { // Not on the same row or the same column.
+                            CanMove= false;
+                        }
+                    } else {
+                        CanMove= false;
+                    }
+                }
+                if (CanMove){
+                    can.add(destination);
+                }
+            }
+        }
+        return can;
+    }
+
     /**
      * 车棋子的移动规则
      *
      * @param chessComponents 棋盘
-     * @param destination     目标位置，如(0, 0), (0, 7)等等
      * @return 车棋子移动的合法性
      */
 

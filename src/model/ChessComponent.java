@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 这个类是一个抽象类，主要表示8*8棋盘上每个格子的棋子情况，当前有两个子类继承它，分别是EmptySlotComponent(空棋子)和RookChessComponent(车)。
@@ -69,11 +70,20 @@ public abstract class ChessComponent extends JComponent {
     protected final ChessColor chessColor;
     private boolean selected;
     protected boolean now=false;
+    protected boolean point=false;
     protected boolean KingAndRook=false;
 //    protected boolean
 
     public boolean isNow() {
         return now;
+    }
+
+    public boolean isPoint() {
+        return point;
+    }
+
+    public void setPoint(boolean point) {
+        this.point = point;
     }
 
     public void setNow(boolean now) {
@@ -89,6 +99,8 @@ public abstract class ChessComponent extends JComponent {
         this.selected = false;
         this.clickController = clickController;
     }
+
+    public abstract List<ChessboardPoint> canMoveTo(ChessComponent chessComponents[][]);
 
     public ChessboardPoint getChessboardPoint() {
         return chessboardPoint;
@@ -135,7 +147,11 @@ public abstract class ChessComponent extends JComponent {
         super.processMouseEvent(e);
         if (e.getID() == MouseEvent.MOUSE_PRESSED) {
             System.out.printf("Click [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
-            clickController.onClick(this);
+            try {
+                clickController.onClick(this);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
         if (e.getID()==MouseEvent.MOUSE_ENTERED){
             if (chessColor.equals(clickController.getChessboard().getCurrentColor())||chessColor.equals(ChessColor.NONE)){
@@ -169,7 +185,7 @@ public abstract class ChessComponent extends JComponent {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponents(g);
-        System.out.printf("repaint chess [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
+//        System.out.printf("repaint chess [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
         if (ZhuTi==1) {
             BACKGROUND_COLORS= new Color[]{new Color(100, 100, 92), new Color(131, 114, 102)};
             Color squareColor = BACKGROUND_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
@@ -191,7 +207,6 @@ public abstract class ChessComponent extends JComponent {
             Music wav=new Music(file);
             wav.play();
         }catch (Exception e){
-            System.out.println("cuowu");
             e.printStackTrace();
         }
 

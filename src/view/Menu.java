@@ -4,8 +4,7 @@ import controller.GameController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 import Music.Music;
 import controller.ClickController;
@@ -44,11 +43,30 @@ public class Menu extends JFrame {
     }
 
     private void addZanTingButton() {
-        JButton button = new JButton("STOP");
-        button.setLocation(HEIGTH / 2, HEIGTH / 2);
-        button.setSize(200, 60);
+        JButton button = new JButton("PLAY");
+        button.setLocation(240 , 417 );
+        button.setSize(150, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
+
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setFont(new Font("华文行楷", Font.PLAIN, 25));
+        button.setForeground(new Color(255, 0, 0));
+
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                button.setForeground(new Color(218, 78, 78));
+                button.setFont(new Font("华文琥珀", Font.PLAIN, 30));
+            }
+
+            public void mouseExited(MouseEvent e) {
+                button.setForeground(new Color(255, 0, 0));
+                button.setFont(new Font("华文行楷", Font.PLAIN, 25));
+            }
+        });
+
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

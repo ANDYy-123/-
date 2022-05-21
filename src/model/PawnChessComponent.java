@@ -8,6 +8,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 这个类表示国际象棋里面的象
@@ -73,11 +75,92 @@ public class PawnChessComponent extends ChessComponent {
         initiatePawnImage(color);
     }
 
+    public java.util.List<ChessboardPoint> canMoveTo(ChessComponent[][] chessComponents){
+        List<ChessboardPoint> can=new ArrayList<>();
+        ChessboardPoint source = getChessboardPoint();
+        for (int m=0;m<8;m++){
+            for (int n=0;n<8;n++){
+                boolean CanMove=true;
+                ChessboardPoint destination=new ChessboardPoint(m,n);
+                if (source.getX()==destination.getX()&&source.getY()==destination.getY()){
+                    CanMove= false;
+                }
+                else {
+                    if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
+                        if (pawnImage == BISHOP_BLACK) {
+                            if (destination.getX() - source.getX() == 2 && destination.getY() == source.getY()&&source.getX()==1 ) {
+                                if (!(chessComponents[destination.getX() - 1][destination.getY()] instanceof EmptySlotComponent)) {
+                                    CanMove= false;
+                                }
+
+                            } else if (destination.getY() == source.getY() && destination.getX() - source.getX() == 1) {
+                                if (!(chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent)) {
+                                    CanMove= false;
+                                }
+                            } else if (chessComponents[destination.getX()][destination.getY()].chessColor == ChessColor.WHITE && destination.getX() - source.getX() == 1 && Math.abs(destination.getY() - source.getY()) == 1) {
+
+                            }
+                            else if (source.getX()==4&&destination.getX() - source.getX() == 1&&
+                                    source.getY()-destination.getY()==1&&chessComponents[source.getX()][destination.getY()].chessColor.equals(ChessColor.WHITE)&&
+                                    chessComponents[source.getX()][destination.getY()] instanceof PawnChessComponent
+                                    && chessComponents[source.getX()][destination.getY()].isPawnRiver()){
+                            }
+                            else if (source.getX()==4&&destination.getX() - source.getX() == 1&&
+                                    destination.getY() -source.getY()==1&&chessComponents[source.getX()][destination.getY()].chessColor.equals(ChessColor.WHITE)&&
+                                    chessComponents[source.getX()][destination.getY()] instanceof PawnChessComponent
+                                    && chessComponents[source.getX()][destination.getY()].isPawnRiver()){
+                            }
+                            else {
+                                CanMove= false;
+                            }
+                        }
+                        else if (pawnImage == BISHOP_WHITE) {
+                            if (source.getX() - destination.getX() == 2 && destination.getY() == source.getY() &&source.getX()==6) {
+                                if (!(chessComponents[destination.getX() + 1][destination.getY()] instanceof EmptySlotComponent)) {
+                                    CanMove= false;
+                                }
+                            } else if (destination.getY() == source.getY() && source.getX() - destination.getX() == 1) {
+                                if (!(chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent)) {
+                                    CanMove= false;
+                                }
+                            } else if (chessComponents[destination.getX()][destination.getY()].chessColor == ChessColor.BLACK && destination.getX() - source.getX() == -1 && Math.abs(destination.getY() - source.getY()) == 1) {
+
+                            }
+                            else if (source.getX()==3&&destination.getX() - source.getX() == -1&&
+                                    source.getY()-destination.getY()==1&&chessComponents[source.getX()][destination.getY()].chessColor.equals(ChessColor.BLACK)&&
+                                    chessComponents[source.getX()][destination.getY()] instanceof PawnChessComponent
+                                    && chessComponents[source.getX()][destination.getY()].isPawnRiver()){
+
+                            }
+                            else if (source.getX()==3&&destination.getX() - source.getX() == -1&&
+                                    destination.getY() -source.getY()==1&&chessComponents[source.getX()][destination.getY()].chessColor.equals(ChessColor.BLACK)&&
+                                    chessComponents[source.getX()][destination.getY()] instanceof PawnChessComponent
+                                    && chessComponents[source.getX()][destination.getY()].isPawnRiver()){
+
+                            }
+                            else {
+                                CanMove= false;
+                            }
+                        } else {
+                            CanMove= false;
+                        }
+
+                    } else {
+                        CanMove= false;
+                    }
+                }
+                if (CanMove){
+                    can.add(destination);
+                }
+            }
+        }
+        return can;
+    }
     /**
      * 车棋子的移动规则
      *
      * @param chessComponents 棋盘
-     * @param destination     目标位置，如(0, 0), (0, 7)等等
+
      * @return 车棋子移动的合法性
      */
 
@@ -86,12 +169,13 @@ public class PawnChessComponent extends ChessComponent {
         ChessboardPoint source = getChessboardPoint();
       if (source.getX()==destination.getX()&&source.getY()==destination.getY()){
           return false;
-      }else {
+      }
+      else {
           if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
               if (pawnImage == BISHOP_BLACK) {
-                  if (destination.getX() - source.getX() == 2 && destination.getY() == source.getY() && id == 1) {
+                  if (destination.getX() - source.getX() == 2 && destination.getY() == source.getY() && move == 0) {
+                      setPawnRiver(true);
                       if (!(chessComponents[destination.getX() - 1][destination.getY()] instanceof EmptySlotComponent)) {
-                          setPawnRiver(true);
                           return false;
                       }
 
@@ -106,17 +190,20 @@ public class PawnChessComponent extends ChessComponent {
                           source.getY()-destination.getY()==1&&chessComponents[source.getX()][destination.getY()].chessColor.equals(ChessColor.WHITE)&&
                           chessComponents[source.getX()][destination.getY()] instanceof PawnChessComponent
                           && chessComponents[source.getX()][destination.getY()].isPawnRiver()){
-
+                  }
+                  else if (source.getX()==4&&destination.getX() - source.getX() == 1&&
+                          destination.getY() -source.getY()==1&&chessComponents[source.getX()][destination.getY()].chessColor.equals(ChessColor.WHITE)&&
+                          chessComponents[source.getX()][destination.getY()] instanceof PawnChessComponent
+                          && chessComponents[source.getX()][destination.getY()].isPawnRiver()){
                   }
                   else {
                       return false;
                   }
               }
               else if (pawnImage == BISHOP_WHITE) {
-                  if (source.getX() - destination.getX() == 2 && destination.getY() == source.getY() && id == 1) {
+                  if (source.getX() - destination.getX() == 2 && destination.getY() == source.getY() && move == 0) {
+                      setPawnRiver(true);
                       if (!(chessComponents[destination.getX() + 1][destination.getY()] instanceof EmptySlotComponent)) {
-                          setPawnRiver(true);
-                          System.out.println("FUCK");
                           return false;
                       }
                   } else if (destination.getY() == source.getY() && source.getX() - destination.getX() == 1) {
@@ -128,6 +215,12 @@ public class PawnChessComponent extends ChessComponent {
                   }
                   else if (source.getX()==3&&destination.getX() - source.getX() == -1&&
                           source.getY()-destination.getY()==1&&chessComponents[source.getX()][destination.getY()].chessColor.equals(ChessColor.BLACK)&&
+                          chessComponents[source.getX()][destination.getY()] instanceof PawnChessComponent
+                          && chessComponents[source.getX()][destination.getY()].isPawnRiver()){
+
+                  }
+                  else if (source.getX()==3&&destination.getX() - source.getX() == -1&&
+                          destination.getY() -source.getY()==1&&chessComponents[source.getX()][destination.getY()].chessColor.equals(ChessColor.BLACK)&&
                           chessComponents[source.getX()][destination.getY()] instanceof PawnChessComponent
                           && chessComponents[source.getX()][destination.getY()].isPawnRiver()){
 

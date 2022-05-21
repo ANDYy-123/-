@@ -7,6 +7,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 这个类表示国际象棋里面的车
@@ -67,11 +69,42 @@ public class KnightChessComponent extends ChessComponent {
         initiateKnightImage(color);
     }
 
+    @Override
+    public List<ChessboardPoint> canMoveTo(ChessComponent[][] chessComponents){
+        List<ChessboardPoint> can=new ArrayList<>();
+        ChessboardPoint source = getChessboardPoint();
+        for (int m=0;m<8;m++){
+            for (int n=0;n<8;n++){
+                boolean CanMove=true;
+                ChessboardPoint destination=new ChessboardPoint(m,n);
+                if (destination.getX()==source.getX()&&destination.getY()==source.getY()){
+                    CanMove= false;
+                }
+                else {
+                    if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
+                        if (Math.abs(source.getX() - destination.getX()) == 2 && Math.abs(source.getY() - destination.getY()) == 1) {
+                        }
+                        else if (Math.abs(source.getX() - destination.getX()) == 1 && Math.abs(source.getY() - destination.getY()) == 2) {
+                        }
+                        else { // Not on the same row or the same column.
+                            CanMove= false;
+                        }
+                    } else {
+                        CanMove= false;
+                    }
+                }
+              if (CanMove){
+                  can.add(destination);
+              }
+            }
+        }
+        return can;
+    }
     /**
      * 车棋子的移动规则
      *
      * @param chessComponents 棋盘
-     * @param destination     目标位置，如(0, 0), (0, 7)等等
+
      * @return 车棋子移动的合法性
      */
 
