@@ -173,7 +173,7 @@ public class PawnChessComponent extends ChessComponent {
       else {
           if (chessComponents[destination.getX()][destination.getY()].getChessColor() != c) {
               if (pawnImage == BISHOP_BLACK) {
-                  if (destination.getX() - source.getX() == 2 && destination.getY() == source.getY() && move == 0) {
+                  if (destination.getX() - source.getX() == 2 && destination.getY() == source.getY() &&source.getX()==1) {
                       setPawnRiver(true);
                       if (!(chessComponents[destination.getX() - 1][destination.getY()] instanceof EmptySlotComponent)) {
                           return false;
@@ -201,7 +201,7 @@ public class PawnChessComponent extends ChessComponent {
                   }
               }
               else if (pawnImage == BISHOP_WHITE) {
-                  if (source.getX() - destination.getX() == 2 && destination.getY() == source.getY() && move == 0) {
+                  if (source.getX() - destination.getX() == 2 && destination.getY() == source.getY() && source.getX()==6) {
                       setPawnRiver(true);
                       if (!(chessComponents[destination.getX() + 1][destination.getY()] instanceof EmptySlotComponent)) {
                           return false;
