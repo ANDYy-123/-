@@ -27,7 +27,7 @@ public class ClickController {
         this.chessboard = chessboard;
     }
 
-    public void onClick(ChessComponent chessComponent) throws IOException {
+    public void onClick(ChessComponent chessComponent) throws IOException, JavaLayerException {
         if (first == null) {
             if (handleFirst(chessComponent)) {
                 chessComponent.setSelected(true);

@@ -151,6 +151,8 @@ public abstract class ChessComponent extends JComponent {
                 clickController.onClick(this);
             } catch (IOException ex) {
                 ex.printStackTrace();
+            } catch (JavaLayerException ex) {
+                ex.printStackTrace();
             }
         }
         if (e.getID()==MouseEvent.MOUSE_ENTERED){

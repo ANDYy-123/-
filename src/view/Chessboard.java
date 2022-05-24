@@ -1,6 +1,7 @@
 package view;
 
 
+import Music.Music;
 import javazoom.jl.decoder.JavaLayerException;
 import model.*;
 import controller.ClickController;
@@ -43,9 +44,9 @@ public class Chessboard extends JComponent {
     private int coo;
     private int roo;
     private int cnt1;
-    ChessboardPoint a=null;
-    ChessboardPoint attack=null;
-    boolean attacknum=false;
+    ChessboardPoint a = null;
+    ChessboardPoint attack = null;
+    boolean attacknum = false;
     //    private ChessComponent[][]
 
     public int getCnt() {
@@ -66,25 +67,25 @@ public class Chessboard extends JComponent {
 
         // FIXME: Initialize chessboard for testing only.
         initRookOnBoard(0, 0, ChessColor.BLACK);
-        initRookOnBoard(0, CHESSBOARD_SIZE - 1, ChessColor.BLACK);
-        initRookOnBoard(CHESSBOARD_SIZE - 1, 0, ChessColor.WHITE);
+//        initRookOnBoard(0, CHESSBOARD_SIZE - 1, ChessColor.BLACK);
+//        initRookOnBoard(CHESSBOARD_SIZE - 1, 0, ChessColor.WHITE);
         initRookOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 1, ChessColor.WHITE);
-        initBishopOnBoard(0, CHESSBOARD_SIZE - 3, ChessColor.BLACK);
-        initBishopOnBoard(0, 2, ChessColor.BLACK);
-        initBishopOnBoard(CHESSBOARD_SIZE - 1, 2, ChessColor.WHITE);
-        initBishopOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 3, ChessColor.WHITE);
-        initQueenOnBoard(0, 3, ChessColor.BLACK);
-        initQueenOnBoard(CHESSBOARD_SIZE - 1, 3, ChessColor.WHITE);
-        for (int i = 0; i < CHESSBOARD_SIZE; i++) {
-            initPawnOnBoard(1, i, ChessColor.BLACK);
-        }
-        for (int i = 0; i < CHESSBOARD_SIZE; i++) {
-            initPawnOnBoard(6, i, ChessColor.WHITE);
-        }
-        initKnightOnBoard(0, 1, ChessColor.BLACK);
-        initKnightOnBoard(0, CHESSBOARD_SIZE - 2, ChessColor.BLACK);
-        initKnightOnBoard(CHESSBOARD_SIZE - 1, 1, ChessColor.WHITE);
-        initKnightOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 2, ChessColor.WHITE);
+//        initBishopOnBoard(0, CHESSBOARD_SIZE - 3, ChessColor.BLACK);
+//        initBishopOnBoard(0, 2, ChessColor.BLACK);
+//        initBishopOnBoard(CHESSBOARD_SIZE - 1, 2, ChessColor.WHITE);
+//        initBishopOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 3, ChessColor.WHITE);
+//        initQueenOnBoard(0, 3, ChessColor.BLACK);
+//        initQueenOnBoard(CHESSBOARD_SIZE - 1, 3, ChessColor.WHITE);
+//        for (int i = 0; i < CHESSBOARD_SIZE; i++) {
+//            initPawnOnBoard(1, i, ChessColor.BLACK);
+//        }
+//        for (int i = 0; i < CHESSBOARD_SIZE; i++) {
+//            initPawnOnBoard(6, i, ChessColor.WHITE);
+//        }
+//        initKnightOnBoard(0, 1, ChessColor.BLACK);
+//        initKnightOnBoard(0, CHESSBOARD_SIZE - 2, ChessColor.BLACK);
+//        initKnightOnBoard(CHESSBOARD_SIZE - 1, 1, ChessColor.WHITE);
+//        initKnightOnBoard(CHESSBOARD_SIZE - 1, CHESSBOARD_SIZE - 2, ChessColor.WHITE);
         initKingOnBoard(0, 4, ChessColor.BLACK);
         initKingOnBoard(CHESSBOARD_SIZE - 1, 4, ChessColor.WHITE);
     }
@@ -115,22 +116,22 @@ public class Chessboard extends JComponent {
                 && Math.abs(chess1.getChessboardPoint().getY() - chess2.getChessboardPoint().getY()) == 2;
         ChessComponent chess3;
         ChessComponent chess4;
-        if (chess1 instanceof PawnChessComponent&&chess2 instanceof EmptySlotComponent
-                &&Math.abs(chess2.getChessboardPoint().getX()-chess1.getChessboardPoint().getX())==2){
-            coo=chess2.getChessboardPoint().getY();
-            roo=chess2.getChessboardPoint().getX();
-            cnt1=cnt;
+        if (chess1 instanceof PawnChessComponent && chess2 instanceof EmptySlotComponent
+                && Math.abs(chess2.getChessboardPoint().getX() - chess1.getChessboardPoint().getX()) == 2) {
+            coo = chess2.getChessboardPoint().getY();
+            roo = chess2.getChessboardPoint().getX();
+            cnt1 = cnt;
         }
-        if (cnt-cnt1!=0){
+        if (cnt - cnt1 != 0) {
             chessComponents[roo][coo].setPawnRiver(false);
         }
-        if (chess1 instanceof PawnChessComponent&&chess2 instanceof EmptySlotComponent
-                &&Math.abs(chess1.getChessboardPoint().getY()-chess2.getChessboardPoint().getY())==1){
+        if (chess1 instanceof PawnChessComponent && chess2 instanceof EmptySlotComponent
+                && Math.abs(chess1.getChessboardPoint().getY() - chess2.getChessboardPoint().getY()) == 1) {
             remove(chessComponents[chess1.getChessboardPoint().getX()][chess2.getChessboardPoint().getY()]);
 
-            putChessOnBoard(new EmptySlotComponent(new ChessboardPoint(chess1.getChessboardPoint().getX(),chess2.getChessboardPoint().getY()),
-                    calculatePoint(chess1.getChessboardPoint().getX(),chess2.getChessboardPoint().getY()),
-                    clickController,CHESS_SIZE));
+            putChessOnBoard(new EmptySlotComponent(new ChessboardPoint(chess1.getChessboardPoint().getX(), chess2.getChessboardPoint().getY()),
+                    calculatePoint(chess1.getChessboardPoint().getX(), chess2.getChessboardPoint().getY()),
+                    clickController, CHESS_SIZE));
         }
         if (!(chess2 instanceof EmptySlotComponent)) {
             remove(chess2);
@@ -152,8 +153,7 @@ public class Chessboard extends JComponent {
                 chessComponents[row4][col4] = chess4;
                 chess3.repaint();
                 chess4.repaint();
-            }
-            else if (chess1.getChessboardPoint().getY() > 4) {
+            } else if (chess1.getChessboardPoint().getY() > 4) {
                 chess3 = chessComponents[chess2.getChessboardPoint().getX()][7];
                 chess4 = chessComponents[chess2.getChessboardPoint().getX()][5];
                 chess3.swapLocation(chess4);
@@ -174,8 +174,8 @@ public class Chessboard extends JComponent {
 
     //判断将军
     public boolean KingJiang(ChessComponent[][] chessComponents) {
-        int num=0;
-        attacknum=false;
+        int num = 0;
+        attacknum = false;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if ((chessComponents[i][j] instanceof KingChessComponent) && chessComponents[i][j].getChessColor() != currentColor) {
@@ -189,17 +189,17 @@ public class Chessboard extends JComponent {
                         && (!((chessComponents[i][j]) instanceof KingChessComponent))
                         && chessComponents[i][j].canMoveTo(chessComponents, a)) {
                     num++;
-                    attack=chessComponents[i][j].getChessboardPoint();
+                    attack = chessComponents[i][j].getChessboardPoint();
 
                 }
             }
         }
-        if (num>0){
-            if (num>1){
-                attacknum=true;
+        if (num > 0) {
+            if (num > 1) {
+                attacknum = true;
             }
             return true;
-        }else {
+        } else {
             return false;
         }
 
@@ -210,95 +210,91 @@ public class Chessboard extends JComponent {
         for (int i = 0; i < 8; i++) {
             if (chessComponents[0][i] instanceof PawnChessComponent
                     && chessComponents[0][i].getChessColor().equals(ChessColor.WHITE)) {
-                co=i;
-                ro=0;
-                C=ChessColor.WHITE;
+                co = i;
+                ro = 0;
+                C = ChessColor.WHITE;
                 return true;
             }
             if (chessComponents[7][i] instanceof PawnChessComponent
                     && chessComponents[7][i].getChessColor().equals(ChessColor.BLACK)) {
-                co=i;
-                ro=7;
-                C=ChessColor.BLACK;
+                co = i;
+                ro = 7;
+                C = ChessColor.BLACK;
                 return true;
             }
         }
         return false;
     }
 
-    public boolean KingDie(){
+    public boolean KingDie() {
 //先判断王的自救
-        if (KingJiang(chessComponents)){
+        if (KingJiang(chessComponents)) {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                    ChessboardPoint b=new ChessboardPoint(i,j);
+                    ChessboardPoint b = new ChessboardPoint(i, j);
                     assert a != null;
-                    if (chessComponents[a.getX()][a.getY()].canMoveTo(chessComponents,b)){
-                       return false;
-                   }
+                    if (chessComponents[a.getX()][a.getY()].canMoveTo(chessComponents, b)) {
+                        return false;
+                    }
                 }
             }
-            if (attacknum){
+            if (attacknum) {
                 return true;
-            }
-            else {
+            } else {
                 for (int i = 0; i < 8; i++) {
                     for (int j = 0; j < 8; j++) {
-                       if (chessComponents[i][j].canMoveTo(chessComponents,attack)){
-                           return false;
-                       }
+                        if (chessComponents[i][j].canMoveTo(chessComponents, attack)) {
+                            return false;
+                        }
                     }
                 }
-                if (attack.getY()==a.getY()){
-                    int col=a.getY();
-                    for (int row=Math.min(a.getX(),attack.getX());row<Math.max(a.getX(),attack.getX());row++){
-                        ChessboardPoint dian=new ChessboardPoint(row,col);
+                if (attack.getY() == a.getY()) {
+                    int col = a.getY();
+                    for (int row = Math.min(a.getX(), attack.getX()); row < Math.max(a.getX(), attack.getX()); row++) {
+                        ChessboardPoint dian = new ChessboardPoint(row, col);
                         for (int i = 0; i < 8; i++) {
                             for (int j = 0; j < 8; j++) {
-                                if (chessComponents[i][j].canMoveTo(chessComponents,dian)
-                                        &&chessComponents[i][j].getChessColor()!=currentColor){
+                                if (chessComponents[i][j].canMoveTo(chessComponents, dian)
+                                        && chessComponents[i][j].getChessColor() != currentColor) {
                                     return false;
                                 }
                             }
                         }
                     }
-                }
-                else if (a.getX()==attack.getX()){
-                    int row=a.getX();
-                    for (int col=Math.min(a.getY(),attack.getY());col<Math.max(a.getY(),attack.getY());col++){
-                        ChessboardPoint dian=new ChessboardPoint(row,col);
+                } else if (a.getX() == attack.getX()) {
+                    int row = a.getX();
+                    for (int col = Math.min(a.getY(), attack.getY()); col < Math.max(a.getY(), attack.getY()); col++) {
+                        ChessboardPoint dian = new ChessboardPoint(row, col);
                         for (int i = 0; i < 8; i++) {
                             for (int j = 0; j < 8; j++) {
-                                if (chessComponents[i][j].canMoveTo(chessComponents,dian)
-                                        &&chessComponents[i][j].getChessColor()!=currentColor){
+                                if (chessComponents[i][j].canMoveTo(chessComponents, dian)
+                                        && chessComponents[i][j].getChessColor() != currentColor) {
                                     return false;
                                 }
                             }
                         }
                     }
-                }
-                else if ((a.getX()>attack.getX()&&a.getY()>attack.getY())||(a.getX()<attack.getX()&&a.getY()<attack.getY())){
-                    for (int row=Math.min(a.getX(),attack.getX()),col=Math.min(a.getY(),attack.getY());
-                         row<Math.max(a.getX(),attack.getX())&&col<Math.max(a.getY(),attack.getY());row++,col++){
-                        ChessboardPoint dian=new ChessboardPoint(row,col);
+                } else if ((a.getX() > attack.getX() && a.getY() > attack.getY()) || (a.getX() < attack.getX() && a.getY() < attack.getY())) {
+                    for (int row = Math.min(a.getX(), attack.getX()), col = Math.min(a.getY(), attack.getY());
+                         row < Math.max(a.getX(), attack.getX()) && col < Math.max(a.getY(), attack.getY()); row++, col++) {
+                        ChessboardPoint dian = new ChessboardPoint(row, col);
                         for (int i = 0; i < 8; i++) {
                             for (int j = 0; j < 8; j++) {
-                                if (chessComponents[i][j].canMoveTo(chessComponents,dian)
-                                        &&chessComponents[i][j].getChessColor()!=currentColor){
+                                if (chessComponents[i][j].canMoveTo(chessComponents, dian)
+                                        && chessComponents[i][j].getChessColor() != currentColor) {
                                     return false;
                                 }
                             }
                         }
                     }
-                }
-                else if ((a.getX()<attack.getX()&&a.getY()>attack.getY())||(a.getX()>attack.getX()&&a.getY()<attack.getY())){
-                    for (int row=Math.max(a.getX(),attack.getX()),col=Math.min(a.getY(),attack.getY());
-                    row>Math.max(a.getX(),attack.getX())&&col<Math.max(a.getY(),attack.getY());row--,col++){
-                        ChessboardPoint dian=new ChessboardPoint(row,col);
+                } else if ((a.getX() < attack.getX() && a.getY() > attack.getY()) || (a.getX() > attack.getX() && a.getY() < attack.getY())) {
+                    for (int row = Math.max(a.getX(), attack.getX()), col = Math.min(a.getY(), attack.getY());
+                         row > Math.max(a.getX(), attack.getX()) && col < Math.max(a.getY(), attack.getY()); row--, col++) {
+                        ChessboardPoint dian = new ChessboardPoint(row, col);
                         for (int i = 0; i < 8; i++) {
                             for (int j = 0; j < 8; j++) {
-                                if (chessComponents[i][j].canMoveTo(chessComponents,dian)
-                                        &&chessComponents[i][j].getChessColor()!=currentColor){
+                                if (chessComponents[i][j].canMoveTo(chessComponents, dian)
+                                        && chessComponents[i][j].getChessColor() != currentColor) {
                                     return false;
                                 }
                             }
@@ -306,28 +302,28 @@ public class Chessboard extends JComponent {
                     }
                 }
             }
-        }
-        else {
+        } else {
             return false;
         }
         return true;
     }
 
-private boolean KingLive(){
-        int cun=0;
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            if (chessComponents[i][j] instanceof KingChessComponent){
-                cun++;
+    private boolean KingLive() {
+        int cun = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (chessComponents[i][j] instanceof KingChessComponent) {
+                    cun++;
+                }
             }
         }
-    }
-    if (cun!=2){
-        return false;
-    }
-    return true;
+        if (cun != 2) {
+            return false;
+        }
+        return true;
 
-}
+    }
+
     public void initiateEmptyChessboard() {
         for (int i = 0; i < chessComponents.length; i++) {
             for (int j = 0; j < chessComponents[i].length; j++) {
@@ -336,75 +332,76 @@ private boolean KingLive(){
         }
     }
 
-    public void drawPoint(ChessComponent chessComponent){
-        if (chessComponent.isSelected()){
-                    for (int m=0;m<chessComponent.canMoveTo(chessComponents).size();m++){
-                       int row= chessComponent.canMoveTo(chessComponents).get(m).getX();
-                       int col=chessComponent.canMoveTo(chessComponents).get(m).getY();
-                       if (chessComponents[row][col] instanceof EmptySlotComponent){
-                           chessComponents[row][col].setPoint(true);
-                           chessComponents[row][col].repaint();
-                       }
+    public void drawPoint(ChessComponent chessComponent) {
+        if (chessComponent.isSelected()) {
+            for (int m = 0; m < chessComponent.canMoveTo(chessComponents).size(); m++) {
+                int row = chessComponent.canMoveTo(chessComponents).get(m).getX();
+                int col = chessComponent.canMoveTo(chessComponents).get(m).getY();
+                if (chessComponents[row][col] instanceof EmptySlotComponent) {
+                    chessComponents[row][col].setPoint(true);
+                    chessComponents[row][col].repaint();
+                }
+            }
+        } else {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (chessComponents[i][j] instanceof EmptySlotComponent) {
+                        chessComponents[i][j].setPoint(false);
+                        chessComponents[i][j].repaint();
                     }
                 }
-        else {
-            for (int i=0;i<8;i++){
-                for (int j=0;j<8;j++){
-                    if (chessComponents[i][j] instanceof EmptySlotComponent){
-                                chessComponents[i][j].setPoint(false);
-                                chessComponents[i][j].repaint();
-                            }
-                        }
-                    }
-                }
+            }
+        }
 
 
     }
 
-    public void swapColor() throws IOException {
-        if (PawnUp()){
-            Object[] options = {"皇后", "主教", "马","车"};
+    public void swapColor() throws IOException, JavaLayerException {
+        if (PawnUp()) {
+            Object[] options = {"皇后", "主教", "马", "车"};
             String s = (String) JOptionPane.showInputDialog(null, "请选择你的棋子:\n", "主题", JOptionPane.PLAIN_MESSAGE, new ImageIcon("xx.png"), options, "xx");
             if (Objects.equals(s, "皇后")) {
-            remove(chessComponents[ro][co]);
-            add(chessComponents[ro][co] = new EmptySlotComponent(chessComponents[ro][co].getChessboardPoint(), chessComponents[ro][co].getLocation(), clickController, CHESS_SIZE));
-            initQueenOnBoard(ro,co,C);
-                chessComponents[ro][co].repaint();
-            }
-            else  if (Objects.equals(s, "主教")) {
                 remove(chessComponents[ro][co]);
                 add(chessComponents[ro][co] = new EmptySlotComponent(chessComponents[ro][co].getChessboardPoint(), chessComponents[ro][co].getLocation(), clickController, CHESS_SIZE));
-                initBishopOnBoard(ro,co,C);
+                initQueenOnBoard(ro, co, C);
                 chessComponents[ro][co].repaint();
-            }
-            else if (Objects.equals(s, "马")) {
+            } else if (Objects.equals(s, "主教")) {
                 remove(chessComponents[ro][co]);
                 add(chessComponents[ro][co] = new EmptySlotComponent(chessComponents[ro][co].getChessboardPoint(), chessComponents[ro][co].getLocation(), clickController, CHESS_SIZE));
-                initKnightOnBoard(ro,co,C);
+                initBishopOnBoard(ro, co, C);
                 chessComponents[ro][co].repaint();
-            }
-            else if (Objects.equals(s, "车")) {
+            } else if (Objects.equals(s, "马")) {
                 remove(chessComponents[ro][co]);
                 add(chessComponents[ro][co] = new EmptySlotComponent(chessComponents[ro][co].getChessboardPoint(), chessComponents[ro][co].getLocation(), clickController, CHESS_SIZE));
-                initRookOnBoard(ro,co,C);
+                initKnightOnBoard(ro, co, C);
+                chessComponents[ro][co].repaint();
+            } else if (Objects.equals(s, "车")) {
+                remove(chessComponents[ro][co]);
+                add(chessComponents[ro][co] = new EmptySlotComponent(chessComponents[ro][co].getChessboardPoint(), chessComponents[ro][co].getLocation(), clickController, CHESS_SIZE));
+                initRookOnBoard(ro, co, C);
                 chessComponents[ro][co].repaint();
             }
         }
-        if (KingDie()){
+        if (KingDie()) {
             JOptionPane.showMessageDialog(null, "掘沙！吴姐！", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
             chessComponents[attack.getX()][attack.getY()].repaint();
-        }
-        if (!KingLive()){
-            JOptionPane.showMessageDialog(null, "掘沙！吴姐！", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
-        }
-
-        else if (KingJiang(chessComponents)) {
+            String filepath = "./music/人类音效3-欢呼的声音(胜利呼喊)_爱给网_aigei_com.mp3";
+            Music musicObject = new Music(filepath);
+            SwingUtilities.invokeLater(() -> {
+                laught mainFrame = new laught(240, 240, musicObject);
+                mainFrame.setVisible(true);
+            });
+            musicObject.play();
+        } else if (KingJiang(chessComponents)) {
             JOptionPane.showMessageDialog(null, "您正在被将军！", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
             chessComponents[attack.getX()][attack.getY()].repaint();
         }
+        if (!KingLive()) {
+            JOptionPane.showMessageDialog(null, "掘沙！吴姐！", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
+        }
         currentColor = currentColor == ChessColor.BLACK ? ChessColor.WHITE : ChessColor.BLACK;
         cnt++;
-        String s=getChessboardGraph();
+        String s = getChessboardGraph();
         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8));
         String line;
         while ((line = br.readLine()) != null) {
@@ -413,16 +410,16 @@ private boolean KingLive(){
                 //每行可以做加工
             }
         }
-        if (KingJiang(chessComponents)){
+        if (KingJiang(chessComponents)) {
             JOptionPane.showMessageDialog(null, "您不能送将！", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
             List<String> a = new ArrayList<>();
-            for (int i=8;i>=0;i--){
-                a.add(ChessGameFrame.StepList.get(ChessGameFrame.StepList.size() - i-1));
+            for (int i = 8; i >= 0; i--) {
+                a.add(ChessGameFrame.StepList.get(ChessGameFrame.StepList.size() - i - 10));
             }
             loadChessGame(a);
-            Chessboard.setCnt(getCnt()-1);
-            for (int i=8;i>=0;i--){
-                ChessGameFrame.StepList.remove(ChessGameFrame.StepList.size() - i-1 );
+            Chessboard.setCnt(getCnt() - 1);
+            for (int i = 8; i >= 0; i--) {
+                ChessGameFrame.StepList.remove(ChessGameFrame.StepList.size() - i - 1);
             }
         }
 
@@ -482,69 +479,75 @@ private boolean KingLive(){
     }
 
     public void loadChessGame(List<String> chessboard) {
-        if (chessboard.get(8).charAt(0) == 'w') {
-            this.currentColor = ChessColor.WHITE;
-        } else if (chessboard.get(8).charAt(0) == 'b') {
-            this.currentColor = ChessColor.BLACK;
-        }
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                ChessboardPoint source = new ChessboardPoint(i, j);
-                PawnChessComponent pw = new PawnChessComponent(source, calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
-                BishopChessComponent bw = new BishopChessComponent(source, calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
-                KingChessComponent kw = new KingChessComponent(source, calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
-                QueenChessComponent qw = new QueenChessComponent(source, calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
-                KnightChessComponent nw = new KnightChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
-                RookChessComponent rw = new RookChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
-                PawnChessComponent pb = new PawnChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
-                BishopChessComponent bb = new BishopChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
-                KingChessComponent kb = new KingChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
-                QueenChessComponent qb = new QueenChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
-                KnightChessComponent nb = new KnightChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
-                RookChessComponent rb = new RookChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
-                EmptySlotComponent e = new EmptySlotComponent(new ChessboardPoint(i, j), calculatePoint(i, j), clickController, CHESS_SIZE);
-                if (chessboard.get(i).charAt(j) == 'p') {
-                    putChessOnBoard(pw);
-                }
-                if (chessboard.get(i).charAt(j) == 'b') {
-                    putChessOnBoard(bw);
-                }
-                if (chessboard.get(i).charAt(j) == 'k') {
-                    putChessOnBoard(kw);
-                }
-                if (chessboard.get(i).charAt(j) == 'q') {
-                    putChessOnBoard(qw);
-                }
-                if (chessboard.get(i).charAt(j) == 'n') {
-                    putChessOnBoard(nw);
-                }
-                if (chessboard.get(i).charAt(j) == 'r') {
-                    putChessOnBoard(rw);
-                }
-                if (chessboard.get(i).charAt(j) == 'P') {
-                    putChessOnBoard(pb);
-                }
-                if (chessboard.get(i).charAt(j) == 'B') {
-                    putChessOnBoard(bb);
-                }
-                if (chessboard.get(i).charAt(j) == 'K') {
-                    putChessOnBoard(kb);
-                }
-                if (chessboard.get(i).charAt(j) == 'Q') {
-                    putChessOnBoard(qb);
-                }
-                if (chessboard.get(i).charAt(j) == 'N') {
-                    putChessOnBoard(nb);
-                }
-                if (chessboard.get(i).charAt(j) == 'R') {
-                    putChessOnBoard(rb);
-                }
-                if (chessboard.get(i).charAt(j) == '_') {
-                    putChessOnBoard(e);
-                }
-                chessComponents[i][j].repaint();
+        System.out.println(chessboard.size());
+        if (chessboard.size() == 9) {
+            if (chessboard.get(8).charAt(0) == 'w') {
+                this.currentColor = ChessColor.WHITE;
+            } else if (chessboard.get(8).charAt(0) == 'b') {
+                this.currentColor = ChessColor.BLACK;
+            } else {
+                JOptionPane.showMessageDialog(null, "行棋方错误！103", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
             }
+            for (int i = 0; i < 8; i++) {
+                if (chessboard.get(i).length() != 8) {
+                    JOptionPane.showMessageDialog(null, "棋盘并非8*8！101", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    for (int j = 0; j < 8; j++) {
+                        ChessboardPoint source = new ChessboardPoint(i, j);
+                        PawnChessComponent pw = new PawnChessComponent(source, calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
+                        BishopChessComponent bw = new BishopChessComponent(source, calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
+                        KingChessComponent kw = new KingChessComponent(source, calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
+                        QueenChessComponent qw = new QueenChessComponent(source, calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
+                        KnightChessComponent nw = new KnightChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
+                        RookChessComponent rw = new RookChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.WHITE, clickController, CHESS_SIZE);
+                        PawnChessComponent pb = new PawnChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
+                        BishopChessComponent bb = new BishopChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
+                        KingChessComponent kb = new KingChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
+                        QueenChessComponent qb = new QueenChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
+                        KnightChessComponent nb = new KnightChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
+                        RookChessComponent rb = new RookChessComponent(new ChessboardPoint(i, j), calculatePoint(i, j), ChessColor.BLACK, clickController, CHESS_SIZE);
+                        EmptySlotComponent e = new EmptySlotComponent(new ChessboardPoint(i, j), calculatePoint(i, j), clickController, CHESS_SIZE);
+                        if (chessboard.get(i).charAt(j) == 'p') {
+                            putChessOnBoard(pw);
+                        } else if (chessboard.get(i).charAt(j) == 'b') {
+                            putChessOnBoard(bw);
+                        } else if (chessboard.get(i).charAt(j) == 'k') {
+                            putChessOnBoard(kw);
+                        } else if (chessboard.get(i).charAt(j) == 'q') {
+                            putChessOnBoard(qw);
+                        } else if (chessboard.get(i).charAt(j) == 'n') {
+                            putChessOnBoard(nw);
+                        } else if (chessboard.get(i).charAt(j) == 'r') {
+                            putChessOnBoard(rw);
+                        } else if (chessboard.get(i).charAt(j) == 'P') {
+                            putChessOnBoard(pb);
+                        } else if (chessboard.get(i).charAt(j) == 'B') {
+                            putChessOnBoard(bb);
+                        } else if (chessboard.get(i).charAt(j) == 'K') {
+                            putChessOnBoard(kb);
+                        } else if (chessboard.get(i).charAt(j) == 'Q') {
+                            putChessOnBoard(qb);
+                        } else if (chessboard.get(i).charAt(j) == 'N') {
+                            putChessOnBoard(nb);
+                        } else if (chessboard.get(i).charAt(j) == 'R') {
+                            putChessOnBoard(rb);
+                        } else if (chessboard.get(i).charAt(j) == '_') {
+                            putChessOnBoard(e);
+                        } else if (chessboard.get(i).charAt(j) == ' ') {
+                            JOptionPane.showMessageDialog(null, "棋盘并非8*8！101", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
+                            break;
+                        } else {
+                            JOptionPane.showMessageDialog(null, "棋子不是六种之一！102", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
+                            break;
+                        }
+                        chessComponents[i][j].repaint();
+                    }
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "行棋方错误！103", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
         }
+
     }
 
     public String getChessboardGraph() {

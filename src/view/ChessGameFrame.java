@@ -18,6 +18,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +31,7 @@ import static view.RankPage.readFile;
 /**
  * 这个类表示游戏过程中的整个游戏界面，是一切的载体
  */
-public class ChessGameFrame extends JFrame {
+public class ChessGameFrame<MagicMatch> extends JFrame {
     //    public final Dimension FRAME_SIZE ;
     private final int WIDTH;
     private final int HEIGTH;
@@ -436,25 +438,38 @@ for (int i=0;i<9;i++){
         button.addActionListener(e -> {
             System.out.println("Click load");
             String path = JOptionPane.showInputDialog(this, "Input Path here");
-            String filePath = "./resource/" + path + ".txt";
-            FileInputStream fis = null;
-            String result = "";
-            List<String> a = new ArrayList<>();
+            String filePath = "./resource/" + path;
+            Path paths = new File(filePath).toPath();
             try {
-                fis = new FileInputStream(filePath);
-
-                BufferedReader br = new BufferedReader(new FileReader(filePath));
+                String mimeType = Files.probeContentType(paths);
+                System.out.println(mimeType);
+                if (Objects.equals(mimeType, "text/plain")){
+                    FileInputStream fis = null;
+                    String result = "";
+                    List<String> a = new ArrayList<>();
+                    try {
+                        fis = new FileInputStream(filePath);
+                        BufferedReader br = new BufferedReader(new FileReader(filePath));
 
 //构造一个BufferedReader类来读取文件
-                String s = null;
-                while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
-                    a.add(s);
+                        String s = null;
+                        while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
+                            a.add(s);
+                        }
+                        br.close();
+                    } catch (Exception b) {
+                        b.printStackTrace();
+                    }
+                    gameController.getChessboard().loadChessGame(a);
                 }
-                br.close();
-            } catch (Exception b) {
-                b.printStackTrace();
+                else {
+                    JOptionPane.showMessageDialog(null, "注意文件格式！104", "FBI WARNING", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            gameController.getChessboard().loadChessGame(a);
+
+
         });
     }
 

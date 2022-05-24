@@ -39,7 +39,6 @@ public class Menu extends JFrame {
         setLayout(null);
         addZanTingButton();
         addPicture();
-
     }
 
     private void addZanTingButton() {

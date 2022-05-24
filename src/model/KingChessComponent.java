@@ -113,15 +113,21 @@ public class KingChessComponent extends ChessComponent {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (chessComponents[i][j].getChessColor() != c
-                        && (!(chessComponents[i][j] instanceof KingChessComponent))
-                        && chessComponents[i][j].canMoveTo(chessComponents, source)) {
-                    p = true;
+                        && (!(chessComponents[i][j] instanceof KingChessComponent))){
+                    for (int o=0;o<chessComponents[i][j].canMoveTo(chessComponents).size();o++){
+                        if (destination.getX()==chessComponents[i][j].canMoveTo(chessComponents).get(o).getX()
+                        &&destination.getY()==chessComponents[i][j].canMoveTo(chessComponents).get(o).getY()){
+                            p = true;
+                        }
+                    }
+                    for (int o=0;o<chessComponents[i][j].canMoveTo(chessComponents).size();o++){
+                        if( (source.getX()==chessComponents[i][j].canMoveTo(chessComponents).get(o).getX()
+                                &&source.getY()==chessComponents[i][j].canMoveTo(chessComponents).get(o).getY())||
+                                (KING.getX()==chessComponents[i][j].canMoveTo(chessComponents).get(o).getX()
+                                        &&KING.getY()==chessComponents[i][j].canMoveTo(chessComponents).get(o).getY())){
+                            s=false;
+                    }
                 }
-                if (chessComponents[i][j].getChessColor() != c
-                        && (!(chessComponents[i][j] instanceof KingChessComponent))
-                        &&( chessComponents[i][j].canMoveTo(chessComponents, KING)
-                        ||chessComponents[i][j].canMoveTo(chessComponents,source))){
-                    s=false;
                 }
             }
         }
@@ -235,14 +241,25 @@ public class KingChessComponent extends ChessComponent {
             for (int j = 0; j < 8; j++) {
                 if (chessComponents[i][j].getChessColor() != c
                         && (!(chessComponents[i][j] instanceof KingChessComponent))
-                        && chessComponents[i][j].canMoveTo(chessComponents, source)) {
-                    p = true;
+                        ) {
+                    for (int o=0;o<chessComponents[i][j].canMoveTo(chessComponents).size();o++){
+                        if (chessComponents[i][j].canMoveTo(chessComponents).get(o).getX()==destination.getX()&&
+                                chessComponents[i][j].canMoveTo(chessComponents).get(o).getY()==destination.getY() ){
+                            p = true;
+                        }
+                    }
                 }
                 if (chessComponents[i][j].getChessColor() != c
-                        && (!(chessComponents[i][j] instanceof KingChessComponent))
-                        &&( chessComponents[i][j].canMoveTo(chessComponents, KING)
-                        ||chessComponents[i][j].canMoveTo(chessComponents,source))){
-                    s=false;
+                        && (!(chessComponents[i][j] instanceof KingChessComponent))){
+                    for (int o=0;o<chessComponents[i][j].canMoveTo(chessComponents).size();o++){
+                        if ((chessComponents[i][j].canMoveTo(chessComponents).get(o).getX()==source.getX()&&
+                                chessComponents[i][j].canMoveTo(chessComponents).get(o).getY()==source.getY()) ||
+                                ((chessComponents[i][j].canMoveTo(chessComponents).get(o).getX()==KING.getX()&&
+                                        chessComponents[i][j].canMoveTo(chessComponents).get(o).getY()==KING.getY()))){
+                            s=false;
+                        }
+                    }
+
                 }
             }
         }
@@ -260,10 +277,14 @@ public class KingChessComponent extends ChessComponent {
 
                     }
                     else if (destination.getX()==source.getX()&&source.getY()-destination.getY()==2
-                            &&source.getX()==0&&source.getY()==4&&chessColor.equals(ChessColor.BLACK)&&this.move==0
+                            &&source.getX()==0&&source.getY()==4&&chessColor.equals(ChessColor.BLACK)
+                            &&this.move==0
                             &&((chessComponents[0][0] instanceof RookChessComponent
-                            &&chessComponents[0][0].chessColor.equals(ChessColor.BLACK)&&chessComponents[0][0].getMove()==0))
-                            &&s){
+                            &&chessComponents[0][0].chessColor.equals(ChessColor.BLACK)
+                            &&chessComponents[0][0].getMove()==0
+                    ))
+                            &&s
+                    ){
                             if (source.getY()>destination.getY()){
                                 for (int col = 1;
                                      col < 4; col++) {
@@ -277,10 +298,12 @@ public class KingChessComponent extends ChessComponent {
                             }
                     }
                     else if (destination.getX()==source.getX()&&source.getY()-destination.getY()==2&&source.getX()==7
-                            &&source.getY()==4&&chessColor.equals(ChessColor.WHITE)&&this.move==0
+                            &&source.getY()==4&&chessColor.equals(ChessColor.WHITE)
+                            &&this.move==0
                             &&((chessComponents[7][0] instanceof RookChessComponent
                             &&chessComponents[7][0].chessColor.equals(ChessColor.WHITE)&&chessComponents[7][0].getMove()==0))
-                            &&s){
+                            &&s
+                    ){
                         if (source.getY()>destination.getY()){
                             for (int col = 1;
                                  col < 4; col++) {
